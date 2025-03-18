@@ -1,0 +1,15 @@
+{% extends 'Main/base.html' %}
+
+{% block title %}
+    Inicio
+{% endblock title %}
+
+{% block content_title %}
+    Blog sobre Python
+{% endblock content_title %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center;">
+        <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-info">Ingresar</a>
+    </div>
+{% endblock content %}
