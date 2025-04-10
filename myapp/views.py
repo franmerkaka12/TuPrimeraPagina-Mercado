@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
-def index(request):
-    context = {"mensaje": "Bienvenidos a mi aplicacion Django"}
-    return render(request, "myapp/index.html", context) 
+def saludo(request):
+    mensaje = "Bienvenido a mi sitio web"
+    return render(request, 'myapp/saludo.html', {'mensaje': mensaje})
