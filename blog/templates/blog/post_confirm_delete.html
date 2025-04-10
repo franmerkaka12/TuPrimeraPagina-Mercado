@@ -1,0 +1,26 @@
+{% extends 'Main/base.html' %}
+
+{% block title %}
+  Eliminar Publicación
+{% endblock title %}
+
+{% block content_title %}
+  Confirmar Eliminación
+{% endblock content_title %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+  <div class="card shadow p-4 rounded text-center" style="max-width: 500px; width: 100%;">
+    <h4 class="text-danger mb-3">¿Estás seguro que querés eliminar esta publicación?</h4>
+    <p class="fs-5 text-muted"><strong>{{ object.titulo }}</strong></p>
+
+    <form method="post" class="mt-4">
+      {% csrf_token %}
+      <div class="d-flex justify-content-around">
+        <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

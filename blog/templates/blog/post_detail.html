@@ -1,0 +1,36 @@
+{% extends 'Main/base.html' %}
+
+{% block title %}
+  Detalle
+{% endblock title %}
+
+{% block content_title %}
+  Vista detallada de una publicación
+{% endblock content_title %}
+
+{% block content %}
+<div class="card shadow-sm p-4">
+  <h3 class="mb-3">{{ object.titulo }}</h3>
+
+  <p><strong>Autor:</strong> {{ object.autor }}</p>
+  <p><strong>Contenido:</strong></p>
+  <div class="border rounded p-3 bg-light mb-3">
+    {{ object.contenido }}
+  </div>
+  <p><strong>Fecha de publicación:</strong> {{ object.fecha_publicacion }}</p>
+  <p>
+    <strong>Estado:</strong>
+    {% if object.estado == "B" %}
+      <span class="badge bg-secondary">Borrador</span>
+    {% else %}
+      <span class="badge bg-success">Publicado</span>
+    {% endif %}
+  </p>
+
+  <div class="mt-4">
+    <a href="{% url 'blog:post_update' object.id %}" class="btn btn-warning">Editar</a>
+    <a href="{% url 'blog:post_delete' object.id %}" class="btn btn-danger">Eliminar</a>
+    <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">Volver</a>
+  </div>
+</div>
+{% endblock content %}

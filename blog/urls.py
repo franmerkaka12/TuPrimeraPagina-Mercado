@@ -1,9 +1,20 @@
 from django.urls import path
-from . import views
+from .views import (
+    PostListView,
+    PostCreateView,
+    PostUpdateView,
+    PostDetailView,
+    PostDeleteView,
+    informacion_personal,
+)
 
-app_name = 'blog'  # Nombre de la app para evitar conflictos
+app_name = 'blog'
 
 urlpatterns = [
-    path('post/list/', views.post_list, name='post_list'),  # <-- IMPORTANTE: la barra después de "list/"
-    path('post/create/', views.post_create, name='post_create'),
+    path('post/list/', PostListView.as_view(), name='post_list'),
+    path('post/create/', PostCreateView.as_view(), name='post_create'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),  # <- nombre corregido
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),         # <- nombre más claro
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),  # <- nombre coherente
+    path('informacion/', informacion_personal, name='informacion_personal'),
 ]

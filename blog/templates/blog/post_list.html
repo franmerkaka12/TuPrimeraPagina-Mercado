@@ -9,54 +9,87 @@
 {% endblock content_title %}
 
 {% block content %}
-<a href="{% url 'blog:post_create' %}" class="btn btn-primary mb-3">Crear publicacion</a>
+{% if user.is_authenticated %}
+  <div class="d-flex justify-content-between mb-3">
+    <a href="{% url 'blog:post_create' %}" class="btn btn-primary">Crear publicación</a>
+    <a href="{% url 'blog:informacion_personal' %}" class="btn btn-outline-secondary">Información Personal</a>
+  </div>
 
-<form action="{% url 'blog:post_list' %}" method="get">
-  <input type="text" name="busqueda" placeholder="Buscar..." type="submit"
-  class="form-control mb-3">
-</form>
+  <form action="{% url 'blog:post_list' %}" method="get" class="mb-4">
+    <input type="text" name="busqueda" placeholder="Buscar..." value="{{ request.GET.busqueda }}" class="form-control">
+  </form>
 
-<div class="container mt-4">
-  <!-- Sección de tarjetas responsivas -->
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    {% for post in posts %}
-      <div class="col">
-        <div class="card border-0 rounded shadow-sm overflow-hidden">
-          {% if post.imagen %}
-            <img src="{{ post.imagen.url }}" class="card-img-top" alt="Imagen de {{ post.titulo }}" style="height: 200px; object-fit: cover;">
-          {% else %}
-            <img src="https://via.placeholder.com/500" class="card-img-top" alt="Imagen por defecto" style="height: 200px; object-fit: cover;">
-          {% endif %}
-          <div class="card-body p-3">
-            <a href="#" class="text-decoration-none text-dark">
-              <h5 class="card-title fw-bold mb-2">{{ post.titulo }}</h5>
-              <p class="card-text text-secondary text-truncate">{{ post.contenido }}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                  <i class="bi bi-calendar me-1"></i> {{ post.fecha_publicacion }}
-                </small>
-                <span class="badge bg-info text-white px-3 py-2">Leer más</span>
-              </div>
-            </a>
+  {% if posts %}
+  <div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for post in posts %}
+        <div class="col">
+          <div class="card border-0 rounded shadow-sm overflow-hidden">
+            {% if post.imagen %}
+              <img src="{{ post.imagen.url }}" class="card-img-top" alt="Imagen de {{ post.titulo }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+              <img src="https://via.placeholder.com/500" class="card-img-top" alt="Imagen por defecto" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body p-3">
+              <a href="{% url 'blog:post_detail' post.id %}" class="text-decoration-none text-dark">
+                <h5 class="card-title fw-bold mb-2">{{ post.titulo }}</h5>
+                <p class="card-text text-secondary text-truncate">{{ post.contenido }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">
+                    {{ post.fecha_de_publicacion|date:"d/m/Y" }}
+                  </small>
+                  <span class="badge bg-info text-white px-3 py-2">Leer más</span>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
-
-  <!-- Lista alternativa para móviles -->
-  <div class="d-md-none mt-4">
-    <ul class="list-group list-group-flush">
-      {% for post in posts %}
-        <li class="list-group-item border-0 mb-3">
-          <a href="#" class="text-decoration-none text-dark">
-            <h5 class="fw-bold mb-1">{{ post.titulo }}</h5>
-            <p class="text-secondary mb-1 text-truncate">{{ post.contenido }}</p>
-            <small class="text-muted"><i class="bi bi-calendar me-1"></i> {{ post.fecha_publicacion }}</small>
-          </a>
-        </li>
       {% endfor %}
-    </ul>
+    </div>
+
+    <div class="table-responsive mt-5">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+          <tr>
+            <td>{{ post.titulo }}</td>
+            <td>{{ post.autor.username }}</td>
+            <td>{{ post.fecha_de_publicacion|date:"d/m/Y" }}</td>
+            <td>
+              {% if post.estado == "B" %}
+                <span class="badge bg-warning text-dark">Borrador</span>
+              {% else %}
+                <span class="badge bg-success">Publicado</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'blog:post_detail' post.id %}" class="btn btn-sm btn-info">Detalle</a>
+              <a href="{% url 'blog:post_update' post.id %}" class="btn btn-sm btn-warning">Cambiar</a>
+              <a href="{% url 'blog:post_delete' post.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+  {% else %}
+    <div class="alert alert-info mt-4">No se encontraron publicaciones.</div>
+  {% endif %}
+{% else %}
+  <div class="alert alert-warning text-center mt-4">
+    Debes iniciar sesión para ver las publicaciones.
+    <br>
+    <a href="{% url 'Main:login' %}" class="btn btn-primary mt-2">Iniciar sesión</a>
+  </div>
+{% endif %}
 {% endblock content %}

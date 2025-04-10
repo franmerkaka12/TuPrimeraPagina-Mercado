@@ -5,11 +5,20 @@
 {% endblock title %}
 
 {% block content_title %}
-    Blog sobre Python
+    Bienvenido
 {% endblock content_title %}
 
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: center;">
-        <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-info">Ingresar</a>
-    </div>
+<div class="text-center mt-5">
+    {% if user.is_authenticated %}
+        <h4 class="mb-4">Hola, {{ user.username }} 👋</h4>
+        <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-info px-4">Ir al blog</a>
+    {% else %}
+        <p class="lead mb-4">Debes iniciar sesión para acceder al blog.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'Main:login' %}" class="btn btn-lg btn-primary">Iniciar sesión</a>
+            <a href="{% url 'Main:register' %}" class="btn btn-lg btn-outline-secondary">Registrarse</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock content %}
